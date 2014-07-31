@@ -233,10 +233,10 @@ void UserManagement::operationDone(StatCode stat, const QByteArray &)
 
             if (data[lastRow].name() == mw->currentUsername())
             {
-                if (newAuth.contains("user"))
-                    mw->setAuth(newAuth["user"].toString(), mw->currentPassword());
-                else if (newAuth.contains("pass"))
-                    mw->setAuth(mw->currentUsername(), newAuth["pass"].toByteArray());
+                delete newUsr;
+                newUsr = Q_NULLPTR;
+                mw->switchToLoginPanel();
+                return;
             }
 
             if (newUsr == Q_NULLPTR)
@@ -244,11 +244,11 @@ void UserManagement::operationDone(StatCode stat, const QByteArray &)
             else
                 data[lastRow] = *newUsr;
 
+
             updateData();
         }
     }
 
-    newAuth.clear();
     delete newUsr;
     newUsr = Q_NULLPTR;
 }
@@ -298,8 +298,6 @@ void UserManagement::resetPassword(int idx)
                                             QString("Enter new password for %1: ").arg(data[idx].name()), QLineEdit::Password,
                                             "", &ok);
 
-    QByteArray pss = MainWidget::hashPassword(newPass.toUtf8());
-
     if (ok)
     {
         DataPointer DS;
@@ -307,8 +305,7 @@ void UserManagement::resetPassword(int idx)
         {
             newUsr = new User(data[idx]);
             (*DS) << static_cast<int>(StatCode::ChangePasswordRequest) << data[idx].name()
-                  << pss;
-            newAuth["pass"] = pss;
+                  << MainWidget::hashPassword(newPass.toUtf8());
             mw->connection()->send();
         }
     }
@@ -395,7 +392,6 @@ void UserManagement::rename(int idx)
             newUsr->changeName(newName);
             (*DS) << static_cast<int>(StatCode::RenameUser) << data[idx].name()
                   << newName;
-            newAuth["user"] = newName;
             mw->connection()->send();
         }
     }

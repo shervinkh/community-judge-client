@@ -51,8 +51,6 @@ private:
     QHBoxLayout *fixedDownLayout;
     QVBoxLayout *total;
 
-    QByteArray lastPass;
-
 public:
     explicit ViewProfile(MainWidget *MW, QWidget *parent = Q_NULLPTR);
     void init();

@@ -20,7 +20,7 @@
 #include <QCryptographicHash>
 
 const QString MainWidget::ver = "Beta-1";
-const QString MainWidget::verDate = "2014/07/22";
+const QString MainWidget::verDate = "2014/07/31";
 
 MainWidget::MainWidget(Connection *con, QWidget *parent) :
     QWidget(parent), conn(con)
@@ -242,11 +242,7 @@ void MainWidget::setAuth(const QString &uname, const QByteArray &pass)
 {
     auth["user"] = uname;
     auth["pass"] = pass;
-
     connection()->setAuth(auth);
-
-    userP->init();
-    adminP->init();
 }
 
 void MainWidget::loginDo()

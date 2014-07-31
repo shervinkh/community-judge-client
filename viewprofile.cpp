@@ -137,8 +137,8 @@ void ViewProfile::changePassword()
         DataPointer DS;
         if (DS = mw->connection()->prepare(this, SLOT(changePasswordDone(StatCode,QByteArray))))
         {
-            lastPass = MainWidget::hashPassword(CPD.password().toUtf8());
-            (*DS) << static_cast<int>(StatCode::ChangePasswordRequest) << mw->currentUsername() << lastPass;
+            (*DS) << static_cast<int>(StatCode::ChangePasswordRequest) << mw->currentUsername()
+                  << MainWidget::hashPassword(CPD.password().toUtf8());
             mw->connection()->send();
         }
     }
@@ -149,10 +149,8 @@ void ViewProfile::changePasswordDone(StatCode stat, const QByteArray &)
     if (!mw->handleGeneralStatCodes(stat) && stat == StatCode::OperationSuccessful)
     {
         QMessageBox::information(this, "Change Password", "Password successfully changed");
-        mw->setAuth(mw->currentUsername(), lastPass);
+        mw->switchToLoginPanel();
     }
-
-    lastPass.clear();
 }
 
 void ViewProfile::request()

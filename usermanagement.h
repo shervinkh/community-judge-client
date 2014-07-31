@@ -61,8 +61,6 @@ private:
     QAction *renameAction;
     QAction *recordAction;
 
-    DataTable newAuth;
-
     void updateData();
 
     int lastRow;
